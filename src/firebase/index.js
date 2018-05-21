@@ -1,12 +1,2 @@
-import {firestore, storage, auth} from "./firebase-init";
-import { signIn, signOut, signUp } from "./auth";
-
-export {
-  firestore,
-  storage,
-  auth,
-
-  signOut,
-  signIn,
-  signUp
-}
+export {firestore, storage, auth} from "./firebase-init";
+export {signIn, signOut, signUp, currentUser} from "./auth";

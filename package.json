@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.5.2",
     "firebase": "^5.0.3",
+    "immutable": "^3.8.2",
     "lodash": "^4.17.10",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
@@ -14,6 +15,7 @@
     "react-scripts": "1.1.4",
     "recompose": "^0.27.1",
     "redux": "^4.0.0",
+    "redux-immutable": "^4.0.0",
     "redux-saga": "^0.16.0",
     "reselect": "^3.0.1"
   },

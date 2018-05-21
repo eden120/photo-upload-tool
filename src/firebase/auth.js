@@ -50,3 +50,19 @@ export function signOut() {
       .catch(error => reject(error));
   });
 }
+
+/**
+ * Get current user login
+ * @returns {Promise<any>}
+ */
+export function currentUser() {
+  return new Promise((resolve, reject) => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        resolve({ uid: user.uid, email: user.email });
+      } else {
+        reject();
+      }
+    });
+  });
+}

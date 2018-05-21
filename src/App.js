@@ -1,63 +1,59 @@
-import React, {Component} from 'react';
-import {BrowserRouter as Router, Route, Link} from "react-router-dom";
+import React, { PureComponent } from 'react';
+import { Provider } from 'react-redux';
+import { Spin } from 'antd';
+import { currentUser } from './firebase';
+import AppLayout from './views/frontpage';
+import configureStore from './store';
 
-import { Layout, Menu } from 'antd';
-
-import {firestore} from "./firebase";
-
-import {LoadableHome} from './views/frontpage/home';
-import {LoadableRegister} from './views/frontpage/register';
-import {LoadableLogin} from './views/frontpage/login';
-
-import 'antd/dist/antd.css';
-
-const { Header, Content } = Layout;
-
-class App extends Component {
+class App extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isReady: false,
+      isLogin: false,
+      user: {},
+    };
+    this.loadAssetsAsync = this.loadAssetsAsync.bind(this);
+  }
 
   componentWillMount() {
-    firestore.collection("users").add({
-      first: "Ada",
-      last: "Lovelace",
-      born: 1815
-    })
-      .then(function (docRef) {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(function (error) {
-        console.error("Error adding document: ", error);
+    this.loadAssetsAsync();
+  }
+
+  async loadAssetsAsync() {
+    try {
+      const user = await currentUser();
+      this.setState({
+        isLogin: true,
+        user,
       });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.setState({ isReady: true });
+    }
   }
 
   render() {
+    const { isLogin, user, isReady } = this.state;
+    if (!isReady) {
+      return (
+        <div className="page-loading">
+          <Spin size="large" />
+        </div>
+      );
+    }
+    const store = configureStore({
+      auth: {
+        isLogin,
+        user,
+        loading: false,
+      },
+    });
     return (
-      <Router>
-        <Layout className="layout">
-          <Header>
-            <div className="logo" />
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              style={{ lineHeight: '64px' }}
-            >
-              <Menu.Item key="1">
-                <Link to="/login">Login</Link>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Link to="/sign/creator">Become Creator</Link>
-              </Menu.Item>
-              <Menu.Item key="3">
-                <Link to="/sign/user">SignUp</Link>
-              </Menu.Item>
-            </Menu>
-          </Header>
-          <Content style={{ padding: '0 50px' }}>
-            <Route exact path="/" component={LoadableHome}/>
-            <Route exact path="/sign/:type" component={LoadableRegister}/>
-            <Route exact path="/login" component={LoadableLogin}/>
-          </Content>
-        </Layout>
-      </Router>
+      <Provider store={store}>
+        <AppLayout />
+      </Provider>
     );
   }
 }
