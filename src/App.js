@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Provider } from 'react-redux';
 import { Spin } from 'antd';
-import { currentUser } from './firebase';
+import { currentUser, getDocument } from './firebase';
 import AppLayout from './views/frontpage';
 import configureStore from './store';
 
@@ -23,9 +23,11 @@ class App extends PureComponent {
   async loadAssetsAsync() {
     try {
       const user = await currentUser();
+      const userInfo = await getDocument(`users/${user.uid}`);
+      console.log(userInfo);
       this.setState({
         isLogin: true,
-        user,
+        user: {...user, ...userInfo},
       });
     } catch (e) {
       console.error(e);

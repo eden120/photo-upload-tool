@@ -57,7 +57,7 @@ export function signOut() {
  */
 export function currentUser() {
   return new Promise((resolve, reject) => {
-    auth.onAuthStateChanged((user) => {
+    app.auth().onAuthStateChanged((user) => {
       if (user) {
         resolve({ uid: user.uid, email: user.email });
       } else {

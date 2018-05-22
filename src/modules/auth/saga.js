@@ -1,6 +1,6 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 import * as Actions from './constants';
-import {signIn, signOut, signUp, setDocument} from '../../firebase';
+import {signIn, signOut, signUp, setDocument, getDocument} from '../../firebase';
 import {LOGIN_SUCCESS} from "./constants";
 import {LOGIN_ERROR} from "./constants";
 
@@ -8,21 +8,21 @@ export function* signInSaga({payload}) {
   const {email, password, remember} = payload;
   try {
     const user = yield call(signIn, email, password, remember);
-    yield put({type: LOGIN_SUCCESS, payload: {user}});
+    const userInfo = yield call(getDocument, `users/${user.uid}`);
+    yield put({type: LOGIN_SUCCESS, payload: {user: {...user, ...userInfo}}});
   } catch (error) {
     yield put({type: LOGIN_ERROR, payload: {error}});
   }
 }
 
 export function* signUpSaga({payload}) {
-  console.log(payload, 'payload');
   const {email, password, name, type} = payload;
   try {
     const user = yield call(signUp, email, password);
     // Set data for user
     const data = type === "creator" ? {name, email, type, isCreatorActive: false} : {name, email, type};
     yield call(setDocument, 'users', user.uid, data);
-    yield put({type: LOGIN_SUCCESS, payload: {user}});
+    yield put({type: LOGIN_SUCCESS, payload: {user: {...user, ...data}}});
   } catch (error) {
     yield put({type: Actions.SIGN_UP_ERROR, payload: {error}});
   }
