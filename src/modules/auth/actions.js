@@ -17,18 +17,14 @@ export function login({email, password, remember = true}) {
 }
 
 /**
- * register with email and password action
- * @param email
- * @param password
- * @param remember
- * @returns {{type, payload: {email: *, password: *, remember: *}}}
+ * Register
+ * @param info
+ * @returns {{type: string, payload: *}}
  */
-export function register(email, password, remember) {
+export function register(info) {
   return {
     type: Actions.SIGN_UP_REQUEST,
-    payload: {
-      email, password, remember,
-    },
+    payload: info,
   };
 }
 

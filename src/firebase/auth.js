@@ -24,7 +24,7 @@ export function signUp(email, password) {
  * @param password
  * @returns {Promise<any>}
  */
-export function signIn(email, password, remember) {
+export function signIn(email, password, remember = false) {
   return new Promise((resolve, reject) => {
     auth
       .signInWithEmailAndPassword(email, password)

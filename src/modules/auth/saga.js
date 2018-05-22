@@ -1,6 +1,6 @@
-import {call, put, takeLatest, select} from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 import * as Actions from './constants';
-import {signIn, signOut} from '../../firebase';
+import {signIn, signOut, signUp, setDocument} from '../../firebase';
 import {LOGIN_SUCCESS} from "./constants";
 import {LOGIN_ERROR} from "./constants";
 
@@ -15,22 +15,25 @@ export function* signInSaga({payload}) {
 }
 
 export function* signUpSaga({payload}) {
-  // const { email, password } = payload;
-  // try {
-  //   const user = yield call(signUp, email, password);
-  //   yield put(loginSuccess(user));
-  //   yield put(redirectToMoreInfoScreen());
-  // } catch (error) {
-  //   yield put({ type: Actions.SIGN_UP_ERROR, payload: { error } });
-  // }
+  console.log(payload, 'payload');
+  const {email, password, name, type} = payload;
+  try {
+    const user = yield call(signUp, email, password);
+    // Set data for user
+    const data = type === "creator" ? {name, email, type, isCreatorActive: false} : {name, email, type};
+    yield call(setDocument, 'users', user.uid, data);
+    yield put({type: LOGIN_SUCCESS, payload: {user}});
+  } catch (error) {
+    yield put({type: Actions.SIGN_UP_ERROR, payload: {error}});
+  }
 }
 
 export function* logOut() {
   try {
     yield call(signOut);
-    yield put({ type: Actions.LOGOUT_SUCCESS });
+    yield put({type: Actions.LOGOUT_SUCCESS});
   } catch (error) {
-    yield put({ type: 'LOUT_OUT_ERROR' });
+    yield put({type: 'LOUT_OUT_ERROR'});
   }
 }
 
