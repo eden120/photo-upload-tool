@@ -3,30 +3,14 @@ import {BrowserRouter as Router, Route, Link} from "react-router-dom";
 
 import { Layout, Menu } from 'antd';
 
-// import {firestore} from "./firebase";
-
 import {LoadableHome} from './home';
 import {LoadableRegister} from './register';
 import {LoadableLogin} from './login';
+import PrivateRoute from './PrivateRoute';
 
 const { Header, Content } = Layout;
 
 class App extends Component {
-
-  componentWillMount() {
-    // firestore.collection("users").add({
-    //   first: "Ada",
-    //   last: "Lovelace",
-    //   born: 1815
-    // })
-    //   .then(function (docRef) {
-    //     console.log("Document written with ID: ", docRef.id);
-    //   })
-    //   .catch(function (error) {
-    //     console.error("Error adding document: ", error);
-    //   });
-  }
-
   render() {
     return (
       <Router>
@@ -50,7 +34,7 @@ class App extends Component {
             </Menu>
           </Header>
           <Content style={{ padding: '0 50px' }}>
-            <Route exact path="/" component={LoadableHome}/>
+            <PrivateRoute exact path="/" component={LoadableHome}/>
             <Route exact path="/sign/:type" component={LoadableRegister}/>
             <Route exact path="/login" component={LoadableLogin}/>
           </Content>

@@ -1,32 +1,45 @@
-import {
-  applyMiddleware,
-  createStore,
-  compose,
-} from 'redux';
-import { fromJS } from 'immutable';
+/**
+ * Create the store with dynamic reducers
+ */
+
+import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { fromJS } from 'immutable';
 
-import reducer from './reducers';
-import rootSaga from './sagas';
+import reducers from './reducers';
+import sagas from './sagas';
 
-const hoc = compose;
-
-// create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(initialState = {}) {
-  const middleware = [sagaMiddleware];
-  const enhancer = hoc(applyMiddleware(...middleware));
+  // Create the store with middlewares
+  const middlewares = [
+    sagaMiddleware,
+  ];
+
+  const enhancers = [
+    applyMiddleware(...middlewares),
+  ];
+
+  // If Redux DevTools Extension is installed use it, otherwise use Redux compose
+  /* eslint-disable no-underscore-dangle */
+  const composeEnhancers =
+    process.env.NODE_ENV !== 'production' &&
+    typeof window === 'object' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+        shouldHotReload: false,
+      })
+      : compose;
+
   const store = createStore(
-    reducer,
+    reducers,
     fromJS(initialState),
-    enhancer,
+    composeEnhancers(...enhancers),
   );
 
-  // then run the saga
-  sagaMiddleware.run(rootSaga);
+  // Extensions
+  store.runSaga = sagaMiddleware.run(sagas);
 
-  return {
-    store,
-  };
+  return store;
 }

@@ -1,22 +1,20 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
-
+import {call, put, takeLatest, select} from 'redux-saga/effects';
 import * as Actions from './constants';
+import {signIn} from '../../firebase';
+import {LOGIN_SUCCESS} from "./constants";
+import {LOGIN_ERROR} from "./constants";
 
-function* loginSuccessSaga(user) {
-
+export function* signInSaga({payload}) {
+  const {email, password, remember} = payload;
+  try {
+    const user = yield call(signIn, email, password, remember);
+    yield put({type: LOGIN_SUCCESS, payload: {user}});
+  } catch (error) {
+    yield put({type: LOGIN_ERROR, payload: {error}});
+  }
 }
 
-export function* signInSaga({ payload }) {
-  // const { email, password, remember } = payload;
-  // try {
-  //   const user = yield call(signIn, email, password, remember);
-  //   yield call(loginSuccessSaga, user);
-  // } catch (error) {
-  //   yield put(loginError(error));
-  // }
-}
-
-export function* signUpSaga({ payload }) {
+export function* signUpSaga({payload}) {
   // const { email, password } = payload;
   // try {
   //   const user = yield call(signUp, email, password);

@@ -4,11 +4,7 @@ import {
   login,
   logout,
   register,
-  loginWithFacebook,
-  loginWithGoogle,
   forgotPasswordRequest,
-  addPersonDetail,
-  setPassword,
 } from './actions';
 import { makeSelectAuth } from './selections';
 
@@ -18,10 +14,6 @@ export {
   login,
   logout,
   register,
-  loginWithFacebook,
-  loginWithGoogle,
   forgotPasswordRequest,
-  addPersonDetail,
   makeSelectAuth,
-  setPassword,
 };

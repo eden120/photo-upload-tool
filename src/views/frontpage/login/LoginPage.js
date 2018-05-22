@@ -1,20 +1,33 @@
 import React from 'react';
 import {Form, Icon, Input, Button, Checkbox} from 'antd';
+import {compose} from 'recompose';
+import {connect} from 'react-redux';
+import { Redirect } from 'react-router-dom';
+
+import {makeSelectAuth, login} from '../../../modules/auth';
 
 const FormItem = Form.Item;
 
-class NormalLoginForm extends React.Component {
+class LoginPage extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        this.props.dispatch(login(values));
       }
     });
-  }
+  };
 
   render() {
-    const {getFieldDecorator} = this.props.form;
+    const {form, auth} = this.props;
+    const {getFieldDecorator} = form;
+    const { loading, isLogin } = auth;
+
+    if (isLogin) {
+      return <Redirect to="/" />
+    }
+
     return (
       <div style={{width: '300px', margin: 'auto', paddingTop: '50px'}}>
         <h2>Login</h2>
@@ -45,7 +58,7 @@ class NormalLoginForm extends React.Component {
               <Checkbox>Remember me</Checkbox>
             )}
             <a className="login-form-forgot" href="">Forgot password</a>
-            <Button type="primary" htmlType="submit" className="login-form-button">
+            <Button loading={loading} type="primary" htmlType="submit" className="login-form-button">
               Log in
             </Button>
           </FormItem>
@@ -55,6 +68,20 @@ class NormalLoginForm extends React.Component {
   }
 }
 
-const WrappedNormalLoginForm = Form.create()(NormalLoginForm);
+const mapStateToProps = (state) => {
+  const auth = makeSelectAuth(state);
+  return {
+    auth
+  };
+};
 
-export default WrappedNormalLoginForm;
+const mapDispatchToProps = dispatch => ({dispatch});
+
+const withReducer = connect(mapStateToProps, mapDispatchToProps);
+
+const withForm = Form.create();
+
+export default compose(
+  withReducer,
+  withForm
+)(LoginPage);
