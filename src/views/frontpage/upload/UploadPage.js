@@ -8,6 +8,7 @@ import uuid from 'uuid/v1';
 import {upload, addDocument} from "../../../firebase";
 
 import {makeSelectAuth} from "../../../modules/auth";
+import ListImage from "./ListImage";
 
 class UploadPage extends Component {
   constructor(props, context) {
@@ -40,6 +41,8 @@ class UploadPage extends Component {
           >
             Drop file here or click to upload.
           </Dropzone>
+          <hr/>
+          <ListImage uid={user.uid} />
         </div>
       </div>
     );
