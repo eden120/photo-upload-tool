@@ -24,7 +24,6 @@ class App extends PureComponent {
     try {
       const user = await currentUser();
       const userInfo = await getDocument(`users/${user.uid}`);
-      console.log(userInfo);
       this.setState({
         isLogin: true,
         user: {...user, ...userInfo},

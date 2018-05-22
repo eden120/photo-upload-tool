@@ -5,23 +5,20 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 import {makeSelectAuth} from "../../../modules/auth";
 
-class HomePage extends Component {
+class UploadPage extends Component {
   render() {
     const {auth: {user}} = this.props;
-    if (user.type === "creator" && user.isCreatorActive) {
-      return <Redirect to="/upload"/>
-    }
     return (
       <div>
         <div style={{textAlign: 'center', padding: '200px'}}>
-          {user.type === "creator" ? "Oh hey wait for us to approve, once approved we will email you." : "Oh hey, use our mobile app to browse"}
+          Upload Page
         </div>
       </div>
     );
   }
 }
 
-HomePage.propTypes = {};
+UploadPage.propTypes = {};
 
 const mapStateToProps = (state) => {
   const auth = makeSelectAuth(state);
@@ -31,4 +28,4 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => ({dispatch});
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(UploadPage);

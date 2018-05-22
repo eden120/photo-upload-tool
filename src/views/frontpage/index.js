@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {Layout, Menu} from 'antd';
 
 import {LoadableHome} from './home';
+import {LoadableUpload} from './upload';
 import {LoadableRegister} from './register';
 import {LoadableLogin} from './login';
 import PrivateRoute from './PrivateRoute';
@@ -55,6 +56,7 @@ class App extends Component {
           </Header>
           <Content style={{padding: '0 50px'}}>
             <PrivateRoute exact path="/" component={LoadableHome}/>
+            <PrivateRoute exact path="/upload" component={LoadableUpload}/>
             <Route exact path="/sign/:type" component={LoadableRegister}/>
             <Route exact path="/login" component={LoadableLogin}/>
           </Content>
