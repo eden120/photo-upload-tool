@@ -7,13 +7,15 @@ import {makeSelectAuth} from "../../../modules/auth";
 
 class HomePage extends Component {
   render() {
-    const {auth: {isLogin}} = this.props;
+    const {auth: {isLogin, user}} = this.props;
     if (!isLogin) {
       return <Redirect to="/login"/>
     }
     return (
       <div>
-        <div style={{textAlign: 'center', padding: '200px'}}>Welcome to photo upload tool.</div>
+        <div style={{textAlign: 'center', padding: '200px'}}>
+          {user.type === "creator" ? "Oh hey wait for us to approve, once approved we will email you." : "Oh hey, use our mobile app to browse"}
+        </div>
       </div>
     );
   }
